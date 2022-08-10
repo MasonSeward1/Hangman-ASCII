@@ -3,20 +3,31 @@ package cp2561_project;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Hangman
+public class Hangman implements Runnable
 {
+    public static void startGame() {
+        // Launch background music and game on separate threads
+        PlayAudio audioPlayer = new PlayAudio();
+        Hangman game = new Hangman();
+
+        Thread musicThread = new Thread(audioPlayer);
+        musicThread.start();
+
+        Thread gameThread = new Thread(game);
+        gameThread.start();
+    }
+
     public static void playGame()
     {
         String gameWord = CreateWord.generateWord();
         Scanner userInput = new Scanner(System.in);
-
-        ArrayList<String> lettersGuessed = new ArrayList<>();
+        ArrayList<String> guessedLetters = new ArrayList<>();
 
         char[] gameWordArray = gameWord.toCharArray();
         char [] userAnswers = new char[gameWordArray.length];
 
         boolean gameEnd = false;
-        boolean finishedGuess = true;
+        boolean finishedCorrectGuess = true;
         int guessesLeft = 6;
 
         for (int i = 0 ; i < gameWordArray.length ; i++)
@@ -28,16 +39,18 @@ public class Hangman
         {
             boolean letterGuessed = false;
 
-            System.out.println("\n\n");
+            System.out.println("\n");
             System.out.print("Enter a single letter: ");
 
             String letter = userInput.next();
 
-            while (!letter.matches("^[A-Za-z]{1}$") || Character.isDigit(letter.charAt(0)))
+            while (!letter.matches("^[A-Za-z]{1}$"))
             {
                 System.out.print("Invalid input. Enter a single letter: ");
                 letter = userInput.next();
             }
+
+            guessedLetters.add(letter);
 
             for (int i = 0 ; i < gameWordArray.length ; i++)
             {
@@ -58,20 +71,21 @@ public class Hangman
             {
                 if (c == '?') {
                     System.out.print(" _");
-                    finishedGuess = false;
-                } else
+                    finishedCorrectGuess = false;
+                }
+                else
                     System.out.print(" " + c);
             }
 
             System.out.println("\nGuesses left: " + guessesLeft);
             DrawMan.printHangMan(guessesLeft);
             System.out.println("Letter's Guessed: ");
-            for (char c : userAnswers)
+            for (String c : guessedLetters)
                 System.out.print(" " + c);
 
 
 
-            if (finishedGuess)
+            if (finishedCorrectGuess)
             {
                 System.out.println("You have guessed the word!");
                 gameEnd = true;
@@ -80,10 +94,15 @@ public class Hangman
             if (guessesLeft == 0)
             {
                 System.out.println("\n\nYou are Dead");
+                System.out.println("The word was: " + gameWord);
                 gameEnd = true;
             }
-
-
         }
-     }
+    }
+
+    @Override
+    public void run() {
+        playGame();
+
+    }
 }
