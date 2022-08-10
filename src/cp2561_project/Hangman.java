@@ -8,7 +8,8 @@ import java.util.Scanner;
 
 public class Hangman implements Runnable
 {
-    public static void startGame() {
+    public static void startGame()
+    {
         // Launch background music and game on separate threads
         BackgroundAudio audioPlayer = new BackgroundAudio();
         Hangman game = new Hangman();
@@ -139,7 +140,7 @@ public class Hangman implements Runnable
         }
         catch (Exception e)
         {
-            System.out.println("An unknown error has occured: ");
+            System.out.println("An unknown error has occurred: ");
             e.printStackTrace();
         }
     }
