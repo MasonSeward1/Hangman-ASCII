@@ -21,13 +21,29 @@ public class Hangman implements Runnable
         gameThread.start();
     }
 
-    public static void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+    public static void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException
+    {
+        String gameWord = CreateWord.generateWord(1);
+        Scanner difficulty = new Scanner(System.in);
+
+        System.out.print("Enter a difficulty level 1-3: ");
+        int difficultyLevel = difficulty.nextInt();
+
         File file = new File("gameOver.wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
         Clip clip = AudioSystem.getClip();
         clip.open(audioStream);
 
-        String gameWord = CreateWord.generateWord();
+        if (difficultyLevel == 2)
+        {
+            gameWord = CreateWord.generateWord(2);
+        }
+        else if (difficultyLevel == 3)
+        {
+            gameWord = CreateWord.generateWord(3);
+        }
+
+
         Scanner userInput = new Scanner(System.in);
         ArrayList<String> guessedLetters = new ArrayList<>();
 
@@ -88,10 +104,24 @@ public class Hangman implements Runnable
             System.out.println("\nGuesses left: " + guessesLeft);
             DrawMan.printHangMan(guessesLeft);
             System.out.println("Letter's Guessed: ");
-            for (String c : guessedLetters)
-                System.out.print(" " + c);
 
+            if (difficultyLevel != 3 && difficultyLevel != 2)
+            {
+                for (String c : guessedLetters)
+                    System.out.print(" " + c);
+            }
 
+            else
+                System.out.println("Unavailable during level " + difficultyLevel);
+
+            if (guessesLeft <= 3 && guessesLeft > 1)
+            {
+                System.out.println("HINT: " + gameWordArray[2]);
+            }
+            else if (guessesLeft == 1)
+            {
+                System.out.println("\nHINT: " + gameWordArray[0]);
+            }
 
             if (finishedCorrectGuess)
             {

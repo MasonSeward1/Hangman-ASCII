@@ -15,11 +15,20 @@ public class CreateWord
 //        System.out.println(generateWord());
 //    }
 
-    public static String generateWord()
+    public static String generateWord(int i)
     {
-        String fileName = "hangman_words.txt";
         ArrayList<String> words = new ArrayList<>();
         ArrayList<String> usedWords = new ArrayList<>();
+        String fileName = "hangman_words.txt";
+
+        if (i == 2)
+            fileName = "hangman_words_2.txt";
+        else if (i == 3)
+            fileName = "hangman_words_3.txt";
+        else if (i != 1 && i != 2 && i != 3)
+        {
+            System.out.println("Invalid Input. Selecting level 1 as default");
+        }
 
         try
         {
