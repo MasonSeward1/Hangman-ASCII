@@ -4,7 +4,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
-public class PlayAudio implements Runnable
+public class BackgroundAudio implements Runnable
 {
 
     public static void playAudio(boolean stopPlaying) throws LineUnavailableException, UnsupportedAudioFileException, IOException {

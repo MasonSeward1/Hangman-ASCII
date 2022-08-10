@@ -1,5 +1,8 @@
 package cp2561_project;
 
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,7 +10,7 @@ public class Hangman implements Runnable
 {
     public static void startGame() {
         // Launch background music and game on separate threads
-        PlayAudio audioPlayer = new PlayAudio();
+        BackgroundAudio audioPlayer = new BackgroundAudio();
         Hangman game = new Hangman();
 
         Thread musicThread = new Thread(audioPlayer);
@@ -17,8 +20,12 @@ public class Hangman implements Runnable
         gameThread.start();
     }
 
-    public static void playGame()
-    {
+    public static void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
+        File file = new File("gameOver.wav");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+
         String gameWord = CreateWord.generateWord();
         Scanner userInput = new Scanner(System.in);
         ArrayList<String> guessedLetters = new ArrayList<>();
@@ -42,7 +49,7 @@ public class Hangman implements Runnable
             System.out.println("\n");
             System.out.print("Enter a single letter: ");
 
-            String letter = userInput.next();
+            String letter = (userInput.next());
 
             while (!letter.matches("^[A-Za-z]{1}$"))
             {
@@ -95,14 +102,45 @@ public class Hangman implements Runnable
             {
                 System.out.println("\n\nYou are Dead");
                 System.out.println("The word was: " + gameWord);
+                clip.start();
                 gameEnd = true;
+                Thread.sleep(10000);
+                System.exit(1);
             }
         }
     }
 
     @Override
-    public void run() {
-        playGame();
-
+    public void run()
+    {
+        try
+        {
+            playGame();
+        }
+        catch (UnsupportedAudioFileException e)
+        {
+            System.out.println("The audio file is not supported. Please use WAV format");
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            System.out.println("An IO Exception has occured: ");
+            e.printStackTrace();
+        }
+        catch (LineUnavailableException e)
+        {
+            System.out.println("The line is unavailable: ");
+            e.printStackTrace();
+        }
+        catch (InterruptedException e)
+        {
+            System.out.println("Execution has been interrupted: ");
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            System.out.println("An unknown error has occured: ");
+            e.printStackTrace();
+        }
     }
 }
