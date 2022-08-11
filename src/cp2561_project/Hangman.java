@@ -22,7 +22,7 @@ public class Hangman implements Runnable
         gameThread.start();
     }
 
-    public static void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException
+    public void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException
     {
         String gameWord = CreateWord.generateWord(1);
         Scanner difficulty = new Scanner(System.in);
@@ -117,11 +117,11 @@ public class Hangman implements Runnable
 
             if (guessesLeft <= 3 && guessesLeft > 1)
             {
-                System.out.println("HINT: " + gameWordArray[2]);
+                System.out.println("\n\nHINT: " + gameWordArray[2]);
             }
             else if (guessesLeft == 1)
             {
-                System.out.println("\nHINT: " + gameWordArray[0]);
+                System.out.println("\n\nHINT: " + gameWordArray[0]);
             }
 
             if (finishedCorrectGuess)
@@ -136,7 +136,7 @@ public class Hangman implements Runnable
                 System.out.println("The word was: " + gameWord);
                 clip.start();
                 gameEnd = true;
-                Thread.sleep(10000);
+                Thread.sleep(11500);
                 System.exit(1);
             }
         }
