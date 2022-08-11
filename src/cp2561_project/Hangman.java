@@ -134,9 +134,14 @@ public class Hangman implements Runnable
 
     public void checkGuessesLeft() throws UnsupportedAudioFileException, IOException, InterruptedException
     {
-        if (guessesLeft <= 3 && guessesLeft > 1) {
+        if (guessesLeft == 3) {
             System.out.println("\n\nHINT: " + gameWordArray[2]);
-        } else if (guessesLeft == 1) {
+        }
+
+        else if (guessesLeft == 2)
+            System.out.println("\n\nHINT: " + gameWordArray[1]);
+
+        else if (guessesLeft == 1) {
             System.out.println("\n\nHINT: " + gameWordArray[0]);
         }
 
