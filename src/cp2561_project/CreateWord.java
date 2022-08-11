@@ -22,11 +22,9 @@ public class CreateWord
         BufferedReader in = new BufferedReader(streamReader);
 
         if (i == 2)
-            inputStream = ClassLoader.
-                    getSystemResourceAsStream("hangman_words_2.txt");
+            inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_2.txt");
         else if (i == 3)
-            inputStream = ClassLoader.
-                    getSystemResourceAsStream("hangman_words_3.txt");
+            inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_3.txt");
         else if (i != 1 && i != 2 && i != 3)
         {
             System.out.println("Invalid Input. Selecting level 1 as default");
