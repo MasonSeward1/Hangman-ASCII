@@ -3,8 +3,6 @@ package cp2561_project;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class CreateWord
 {
@@ -19,8 +17,7 @@ public class CreateWord
         ArrayList<String> words = new ArrayList<>();
         ArrayList<String> usedWords = new ArrayList<>();
 
-        InputStream inputStream = ClassLoader.
-                getSystemResourceAsStream("hangman_words.txt");
+        InputStream inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words.txt");
         InputStreamReader streamReader = new InputStreamReader(inputStream, "UTF-8");
         BufferedReader in = new BufferedReader(streamReader);
 

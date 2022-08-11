@@ -2,23 +2,19 @@
 package cp2561_project;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Hangman implements Runnable
 {
-    public static void startGame()
+    public static void startGame() throws UnsupportedAudioFileException, IOException
     {
         // Launch background music and game on separate threads
-        BackgroundAudio audioPlayer = new BackgroundAudio();
-        Hangman game = new Hangman();
+        Thread audioThread = new Thread(new AudioPlayer("background.wav", true));
+        audioThread.start();
 
-        Thread musicThread = new Thread(audioPlayer);
-        musicThread.start();
-
-        Thread gameThread = new Thread(game);
+        Thread gameThread = new Thread(new Hangman());
         gameThread.start();
     }
 
@@ -29,11 +25,6 @@ public class Hangman implements Runnable
 
         System.out.print("Enter a difficulty level 1-3: ");
         int difficultyLevel = difficulty.nextInt();
-
-        File file = new File("gameOver.wav");
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioStream);
 
         if (difficultyLevel == 2)
         {
@@ -134,7 +125,9 @@ public class Hangman implements Runnable
             {
                 System.out.println("\n\nYou are Dead");
                 System.out.println("The word was: " + gameWord);
-                clip.start();
+
+                new AudioPlayer("gameOver.wav").run();
+
                 gameEnd = true;
                 Thread.sleep(11500);
                 System.exit(1);
@@ -156,7 +149,7 @@ public class Hangman implements Runnable
         }
         catch (IOException e)
         {
-            System.out.println("An IO Exception has occured: ");
+            System.out.println("An IO Exception has occurred: ");
             e.printStackTrace();
         }
         catch (LineUnavailableException e)
