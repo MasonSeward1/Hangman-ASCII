@@ -48,17 +48,29 @@ public class Hangman implements Runnable
             userAnswers[i] = '?';
         }
 
-        while (!gameEnd) {
+        while (!gameEnd)
+        {
             boolean letterGuessed = false;
 
             System.out.println("\n");
-            System.out.print("Enter a single letter: ");
+            System.out.print("Enter a single letter (Enter 0 to exit): ");
 
             String letter = (userInput.next());
 
-            while (!letter.matches("^[A-Za-z]{1}$")) {
-                System.out.print("Invalid input. Enter a single letter: ");
-                letter = userInput.next();
+            while (!letter.matches("^[A-Za-z]{1}$"))
+            {
+                if (letter.matches("0"))
+                {
+                    System.out.println("You have guessed the word!");
+                    System.out.println("Goodbye.");
+                    gameEnd = true;
+                    System.exit(1);
+                }
+                else
+                {
+                    System.out.print("Invalid input. Enter a single letter: ");
+                    letter = userInput.next();
+                }
             }
 
             guessedLetters.add(letter);
@@ -126,11 +138,6 @@ public class Hangman implements Runnable
             System.out.println("\n\nHINT: " + gameWordArray[2]);
         } else if (guessesLeft == 1) {
             System.out.println("\n\nHINT: " + gameWordArray[0]);
-        }
-
-        if (finishedCorrectGuess) {
-            System.out.println("You have guessed the word!");
-            gameEnd = true;
         }
 
         if (guessesLeft == 0) {
