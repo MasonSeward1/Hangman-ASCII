@@ -14,7 +14,8 @@ public class CreateWord
 //        System.out.println(generateWord());
 //    }
 
-    public static String generateWord(int i) throws UnsupportedEncodingException {
+    public static String generateWord(int i)
+    {
         ArrayList<String> words = new ArrayList<>();
         ArrayList<String> usedWords = new ArrayList<>();
         InputStream inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_" + i + ".txt");
