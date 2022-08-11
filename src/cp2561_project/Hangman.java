@@ -8,6 +8,13 @@ import java.util.Scanner;
 
 public class Hangman implements Runnable
 {
+    String gameWord = "";
+    String difficultyLevel = "";
+    int guessesLeft = 6;
+    boolean gameEnd = false;
+    boolean finishedCorrectGuess = true;
+    char[] gameWordArray;
+
     public static void startGame() throws UnsupportedAudioFileException, IOException
     {
         // Launch background music and game on separate threads
@@ -20,39 +27,28 @@ public class Hangman implements Runnable
 
     public void playGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException
     {
-        String gameWord = CreateWord.generateWord(1);
-        Scanner difficulty = new Scanner(System.in);
-
-        System.out.print("Enter a difficulty level 1-3: ");
-        int difficultyLevel = difficulty.nextInt();
-
-        if (difficultyLevel == 2)
-        {
-            gameWord = CreateWord.generateWord(2);
-        }
-        else if (difficultyLevel == 3)
-        {
-            gameWord = CreateWord.generateWord(3);
-        }
-
-
         Scanner userInput = new Scanner(System.in);
         ArrayList<String> guessedLetters = new ArrayList<>();
 
-        char[] gameWordArray = gameWord.toCharArray();
-        char [] userAnswers = new char[gameWordArray.length];
+        Scanner difficulty = new Scanner(System.in);
 
-        boolean gameEnd = false;
-        boolean finishedCorrectGuess = true;
-        int guessesLeft = 6;
+        System.out.print("Enter a difficulty level 1-3: ");
+        difficultyLevel = difficulty.next();
 
-        for (int i = 0 ; i < gameWordArray.length ; i++)
-        {
+        switch (difficultyLevel) {
+            case "1" -> gameWord = CreateWord.generateWord(1);
+            case "2" -> gameWord = CreateWord.generateWord(2);
+            case "3" -> gameWord = CreateWord.generateWord(3);
+        }
+        gameWordArray = gameWord.toCharArray();
+
+        char[] userAnswers = new char[gameWordArray.length];
+
+        for (int i = 0; i < gameWordArray.length; i++) {
             userAnswers[i] = '?';
         }
 
-        while (!gameEnd)
-        {
+        while (!gameEnd) {
             boolean letterGuessed = false;
 
             System.out.println("\n");
@@ -60,36 +56,30 @@ public class Hangman implements Runnable
 
             String letter = (userInput.next());
 
-            while (!letter.matches("^[A-Za-z]{1}$"))
-            {
+            while (!letter.matches("^[A-Za-z]{1}$")) {
                 System.out.print("Invalid input. Enter a single letter: ");
                 letter = userInput.next();
             }
 
             guessedLetters.add(letter);
 
-            for (int i = 0 ; i < gameWordArray.length ; i++)
-            {
-                if (letter.charAt(0) == gameWordArray[i])
-                {
+            for (int i = 0; i < gameWordArray.length; i++) {
+                if (letter.charAt(0) == gameWordArray[i]) {
                     userAnswers[i] = letter.charAt(0);
                     letterGuessed = true;
                 }
             }
 
-            if (!letterGuessed)
-            {
+            if (!letterGuessed) {
                 System.out.println("Incorrect letter\n\n");
                 guessesLeft--;
             }
 
-            for (char c : userAnswers)
-            {
+            for (char c : userAnswers) {
                 if (c == '?') {
                     System.out.print(" _");
                     finishedCorrectGuess = false;
-                }
-                else
+                } else
                     System.out.print(" " + c);
             }
 
@@ -97,75 +87,62 @@ public class Hangman implements Runnable
             DrawMan.printHangMan(guessesLeft);
             System.out.println("Letter's Guessed: ");
 
-            if (difficultyLevel != 3 && difficultyLevel != 2)
-            {
+            if (!difficultyLevel.equals("3") && !difficultyLevel.equals("2")) {
                 for (String c : guessedLetters)
                     System.out.print(" " + c);
-            }
-
-            else
+            } else
                 System.out.println("Unavailable during level " + difficultyLevel);
 
-            if (guessesLeft <= 3 && guessesLeft > 1)
-            {
-                System.out.println("\n\nHINT: " + gameWordArray[2]);
-            }
-            else if (guessesLeft == 1)
-            {
-                System.out.println("\n\nHINT: " + gameWordArray[0]);
-            }
-
-            if (finishedCorrectGuess)
-            {
-                System.out.println("You have guessed the word!");
-                gameEnd = true;
-            }
-
-            if (guessesLeft == 0)
-            {
-                System.out.println("\n\nYou are Dead");
-                System.out.println("The word was: " + gameWord);
-
-                new AudioPlayer("gameOver.wav").run();
-
-                gameEnd = true;
-                Thread.sleep(11500);
-                System.exit(1);
-            }
+            checkGuessesLeft();
         }
     }
 
     @Override
     public void run()
     {
-        try
-        {
+        try {
             playGame();
-        }
-        catch (UnsupportedAudioFileException e)
-        {
+        } catch (UnsupportedAudioFileException e) {
             System.out.println("The audio file is not supported. Please use WAV format");
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println("An IO Exception has occurred: ");
             e.printStackTrace();
-        }
-        catch (LineUnavailableException e)
-        {
+        } catch (LineUnavailableException e) {
             System.out.println("The line is unavailable: ");
             e.printStackTrace();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             System.out.println("Execution has been interrupted: ");
             e.printStackTrace();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("An unknown error has occurred: ");
             e.printStackTrace();
         }
     }
+
+    public void checkGuessesLeft() throws UnsupportedAudioFileException, IOException, InterruptedException
+    {
+        if (guessesLeft <= 3 && guessesLeft > 1) {
+            System.out.println("\n\nHINT: " + gameWordArray[2]);
+        } else if (guessesLeft == 1) {
+            System.out.println("\n\nHINT: " + gameWordArray[0]);
+        }
+
+        if (finishedCorrectGuess) {
+            System.out.println("You have guessed the word!");
+            gameEnd = true;
+        }
+
+        if (guessesLeft == 0) {
+            System.out.println("\n\nYou are Dead");
+            System.out.println("The word was: " + gameWord);
+
+            new AudioPlayer("gameOver.wav").run();
+
+            gameEnd = true;
+            Thread.sleep(11500);
+            System.exit(1);
+        }
+    }
 }
+

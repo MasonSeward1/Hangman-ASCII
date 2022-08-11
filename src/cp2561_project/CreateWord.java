@@ -1,6 +1,7 @@
 package cp2561_project;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -16,19 +17,16 @@ public class CreateWord
     public static String generateWord(int i) throws UnsupportedEncodingException {
         ArrayList<String> words = new ArrayList<>();
         ArrayList<String> usedWords = new ArrayList<>();
+        InputStream inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_" + i + ".txt");
 
-        InputStream inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words.txt");
-        InputStreamReader streamReader = new InputStreamReader(inputStream, "UTF-8");
-        BufferedReader in = new BufferedReader(streamReader);
-
-        if (i == 2)
-            inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_2.txt");
-        else if (i == 3)
-            inputStream = CreateWord.class.getClassLoader().getResourceAsStream("hangman_words_3.txt");
-        else if (i != 1 && i != 2 && i != 3)
+        if (i != 1 && i != 2 && i != 3)
         {
             System.out.println("Invalid Input. Selecting level 1 as default");
         }
+
+        assert inputStream != null;
+        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        BufferedReader in = new BufferedReader(streamReader);
 
         try
         {
