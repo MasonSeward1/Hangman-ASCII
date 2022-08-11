@@ -1,0 +1,14 @@
+island
+open
+cactus
+grab
+quiet
+tight
+gather
+destroy
+abaft
+resolute
+closed
+depressed
+slimy
+thirsty
